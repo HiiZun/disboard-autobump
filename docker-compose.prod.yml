@@ -8,6 +8,11 @@ services:
       replicas: 1
     ports:
       - "3000:3000"  # Health check port
+    environment:
+      - NODE_ENV=production
+      - TOKEN=${TOKEN}  # Ensure DISBOARD_TOKEN is set in .env
+      - BUMP_CHANNEL=${BUMP_CHANNEL}  # Ensure DISBOARD_BUMP_CHANNEL is set in .env
+      - SLASH_ID=${SLASH_ID}  # Ensure DISBOARD_SLASH_ID is set in .env
     # Use default overlay network for Swarm
     healthcheck:
       test: ["CMD", "node", "health-check.js"]
