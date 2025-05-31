@@ -8,6 +8,7 @@ services:
     deploy:
       restart_policy:
         condition: unless-stopped
+      replicas: 1
     environment:
       - NODE_ENV=production
     env_file:
@@ -16,16 +17,10 @@ services:
       - "3000:3000"  # Health check port
     volumes:
       - ./logs:/app/logs
-    networks:
-      - autobump-network
+    # Use default overlay network for Swarm
     healthcheck:
       test: ["CMD", "node", "health-check.js"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 10s
-
-networks:
-  autobump-network:
-    driver: overlay
-    attachable: true
