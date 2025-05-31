@@ -5,17 +5,9 @@ services:
     image: ghcr.io/hiizun/disboard-autobump:latest
     # Note: container_name is not supported in Swarm mode
     deploy:
-      restart_policy:
-        condition: unless-stopped
       replicas: 1
-    environment:
-      - NODE_ENV=production
-    env_file:
-      - .env
     ports:
       - "3000:3000"  # Health check port
-    volumes:
-      - ./logs:/app/logs
     # Use default overlay network for Swarm
     healthcheck:
       test: ["CMD", "node", "health-check.js"]
