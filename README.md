@@ -48,6 +48,16 @@ You can now specify a custom slash command ID in the `SLASH_ID` field. If not sp
 ## Docker Support
 This bot supports Docker deployment with automatic builds via GitHub Container Registry (GHCR).
 
+### Docker Swarm vs Standalone Mode
+
+**Docker Swarm mode** provides orchestration, scaling, and high availability:
+```powershell
+# Initialize Docker Swarm (if not already done)
+docker swarm init
+```
+
+**Standalone mode** is simpler for single-node deployments.
+
 ### Using Pre-built Images from GHCR:
 Images are automatically built and published to GHCR on every push to the main branch.
 
@@ -62,13 +72,24 @@ docker pull ghcr.io/hiizun/disboard-autobump:latest
 docker run -d --name discord-autobump --env-file .env ghcr.io/hiizun/disboard-autobump:latest
 ```
 
-**Using Docker Compose (Recommended):**
-```bash
-# For production deployment with GHCR image
-docker-compose -f docker-compose.prod.yml up -d
+**Using Docker Compose:**
 
-# For local development with auto-build
-docker-compose up -d
+For **Docker Swarm** mode:
+```bash
+# For production deployment with GHCR image (Swarm mode)
+docker stack deploy -c docker-compose.prod.yml disboard-bumper
+
+# For local development with auto-build (Swarm mode)  
+docker stack deploy -c docker-compose.yml disboard-bumper
+```
+
+For **standalone Docker Compose**:
+```bash
+# For production deployment with GHCR image (standalone)
+docker-compose -f docker-compose.prod.standalone.yml up -d
+
+# For local development with auto-build (standalone)
+docker-compose -f docker-compose.standalone.yml up -d
 ```
 
 ### Manual Docker Build:
@@ -81,6 +102,24 @@ docker run -d --name discord-autobump --env-file .env disboard-autobump
 ```
 
 ### Container Management:
+
+**Docker Swarm mode:**
+```bash
+# Check service status
+docker service ls
+docker service ps disboard-bumper_discord-autobump
+
+# Check logs
+docker service logs disboard-bumper_discord-autobump
+
+# Remove stack
+docker stack rm disboard-bumper
+
+# Scale service (run multiple instances)
+docker service scale disboard-bumper_discord-autobump=2
+```
+
+**Standalone Docker mode:**
 ```bash
 # Check logs
 docker logs discord-autobump
@@ -93,7 +132,10 @@ docker stop discord-autobump && docker rm discord-autobump
 
 # Check container health
 docker inspect --format='{{json .State.Health}}' discord-autobump
+```
 
+**Health endpoint (both modes):**
+```bash
 # Access health endpoint
 curl http://localhost:3000/health
 ```

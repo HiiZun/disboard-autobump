@@ -4,10 +4,8 @@ services:
   discord-autobump:
     # Build locally for development
     build: .
-    # Note: container_name is not supported in Swarm mode
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    container_name: discord-autobump
+    restart: unless-stopped
     environment:
       - NODE_ENV=production
     env_file:
@@ -27,5 +25,4 @@ services:
 
 networks:
   autobump-network:
-    driver: overlay
-    attachable: true
+    driver: bridge
