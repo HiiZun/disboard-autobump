@@ -36,4 +36,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner.toLowerCase() }}/disboard-autobump:latest
+          tags: ghcr.io/hiizun/disboard-autobump:latest
