@@ -6,8 +6,6 @@ services:
     # Note: container_name is not supported in Swarm mode
     deploy:
       replicas: 1
-    ports:
-      - "3000:3000"  # Health check port
     environment:
       - NODE_ENV=production
       - TOKEN=${TOKEN}  # Ensure DISBOARD_TOKEN is set in .env
